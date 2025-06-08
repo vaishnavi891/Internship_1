@@ -1,0 +1,15 @@
+.analytics-container {
+  padding: 1rem;
+  font-family: sans-serif;
+}
+
+.analytics-container h2, h3 {
+  margin-top: 2rem;
+  color: #333;
+}
+
+.analytics-container select {
+  padding: 0.5rem;
+  margin-left: 0.5rem;
+}
+

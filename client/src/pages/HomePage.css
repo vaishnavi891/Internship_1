@@ -1,0 +1,127 @@
+/* Container */
+.homepage-container {
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background-color: white;
+    width:100vw;
+  }
+  
+  /* Header */
+  .header {
+background-color: #2c3e50;
+    color: white;
+    padding: 16px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .header h1 {
+    margin: 0;
+    font-size: 32px;
+    font-weight: bold;
+  }
+  .header img {
+    height: 50px;
+    width: 50px;
+    border-radius:10%;
+  }
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .nav-links a {
+    margin-left: 16px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .nav-links a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Main Content */
+  .main-content {
+    margin-top: 120px; /* to push below navbar */
+    padding: 20px 40px;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+    background-color: white;
+  }
+  
+  
+  .subtitle {
+    font-size: 28px;
+    margin-bottom: 40px;
+  }
+  
+  /* Cards */
+  .options-grid {
+    display: flex;
+    justify-content: space-around;
+    background-color: white;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .card {
+    background-color: white;
+    padding: 24px;
+    width: 280px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card h3 {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+  
+  .card a {
+    display: block;
+    color: #007bff;
+    text-decoration: none;
+    margin-bottom: 8px;
+  }
+  
+  .card a:hover {
+    text-decoration: underline;
+  }
+
+  .internship-section {
+    margin-top: 2rem;
+    background-color: #f9f9f9;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  .internship-section ul {
+    padding-left: 20px;
+  }
+  
+  
+  .card button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .card button:hover {
+    background-color: #45a049;
+  }
+  .dis{
+    display:block;
+  }
+  ul, li {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  
