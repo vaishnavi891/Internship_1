@@ -14,10 +14,11 @@ import Analytics from './pages/Analytics';
 import Login_ad from './pages/Login_ad';
 import Login from './pages/login';
 import Register from './pages/Register';
-import InternshipForm from './pages/InternshipForm';
+import InternshipForm from './pages/internshipform';
 import Upload from './pages/Upload';
 import Home  from './pages/Home';
 import Landing from './pages/Landing';
+import Profile from './pages/Profile';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -28,6 +29,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/upload" element={<Upload />} />
         <Route path="/admin-login" element={<Login_ad />} />
         <Route path="/student-login" element={<Login />} />

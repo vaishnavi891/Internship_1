@@ -1,0 +1,163 @@
+.container {
+  max-width: 1300px;
+  margin: auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 10px;
+}
+
+.toggle-btn {
+  background-color: #333;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.filter-card {
+  background: #f9f9f9;
+  padding: 20px;
+  border: 1px solid #ddd;
+  margin-bottom: 30px;
+}
+
+.filter-title {
+  margin-bottom: 20px;
+}
+
+.filters-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  width: calc(33.33% - 10px);
+}
+
+.form-group.full {
+  flex-direction: row;
+  gap: 10px;
+  width: 100%;
+  margin-top: 15px;
+}
+
+select,
+input[type="text"] {
+  padding: 8px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.primary {
+  background-color: #28a745;
+  color: white;
+}
+
+.secondary {
+  background-color: #ccc;
+  color: black;
+}
+
+.table-card {
+  background: #fff;
+  padding: 20px;
+  border: 1px solid #ddd;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+th {
+  background-color: #f0f0f0;
+}
+
+.docs {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+.docs a {
+  text-decoration: none;
+  padding: 6px 10px;
+  background-color: #f1f1f1;
+  border-radius: 4px;
+  color: #000;
+  font-size: 14px;
+}
+
+.badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
+  display: inline-block;
+  text-transform: capitalize;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Blue - Info / Future */
+.badge-blue {
+  background-color: #007bff;
+  color: #ffffff;
+  border-color: #007bff;
+}
+
+/* Green - Approved / Completed */
+.badge-green {
+  background-color: #28a745;
+  color: #ffffff;
+  border-color: #28a745;
+}
+
+/* Red - Rejected / Error */
+.badge-red {
+  background-color: #dc3545;
+  color: #ffffff;
+  border-color: #dc3545;
+}
+
+
+
+
+.muted {
+  color: #999;
+  font-size: 13px;
+}
+
+.center {
+  text-align: center;
+}

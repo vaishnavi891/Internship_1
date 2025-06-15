@@ -28,7 +28,6 @@ const Feedbacks = () => {
         <thead>
           <tr>
             <th>Roll No</th>
-            <th>Internship ID</th>
             <th>Skills Learned</th>
             <th>Technical Skill</th>
             <th>Communication</th>
@@ -41,7 +40,6 @@ const Feedbacks = () => {
           {feedbacks.map((f, index) => (
             <tr key={index}>
               <td>{f.rollNumber}</td>
-              <td>{f.internshipID}</td>
               <td>{f.skillsLearned}</td>
               <td>{f.technicalSkill}</td>
               <td>{f.communicationSkill}</td>

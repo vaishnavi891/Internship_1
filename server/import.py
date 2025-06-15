@@ -3,13 +3,13 @@ from pymongo import MongoClient
 import re
 
 # Load Excel and clean column headers
-df = pd.read_excel(r"c:\Users\LENOVO\Downloads\2024-25 - Internship Candidates Details form (Responses) (1).xlsx")
-df.columns = df.columns.str.strip().str.replace("\n", " ").str.replace("  ", " ", regex=False)
+df = pd.read_excel(r"c:\\Users\\LENOVO\\Downloads\\2024-25 - Internship Candidates Details form (Responses) (1).xlsx")
+df.columns = df.columns.str.strip().str.replace("\\n", " ").str.replace("  ", " ", regex=False)
 
 # MongoDB connection
 client = MongoClient("mongodb://localhost:27017")
 db = client["inter"]
-student_collection = db["users"]
+student_collection = db["students"]
 internship_collection = db["internships"]
 
 # Function to safely get value
@@ -29,7 +29,7 @@ def parse_number(text):
     if pd.isna(text):
         return None
     try:
-        return float(re.findall(r"\d+(?:\.\d+)?", str(text))[0])
+        return float(re.findall(r"\\d+(?:\\.\\d+)?", str(text))[0])
     except:
         return None
 
@@ -41,9 +41,15 @@ df_cleaned.drop_duplicates(subset="Roll No.", inplace=True)
 # Ensure timezone-free datetime
 for column in ["Starting Date", "Ending Date", "Timestamp"]:
     if column in df_cleaned.columns:
-        df_cleaned.loc[:, column] = df_cleaned[column].apply(
-            lambda x: x.tz_localize(None) if isinstance(x, pd.Timestamp) and x.tzinfo else convert_to_none_if_nat(x)
-        )
+        def safe_tz_localize(x):
+            try:
+                if isinstance(x, pd.Timestamp) and x.tzinfo:
+                    return x.tz_localize(None)
+                else:
+                    return convert_to_none_if_nat(x)
+            except Exception:
+                return convert_to_none_if_nat(x)
+        df_cleaned.loc[:, column] = df_cleaned[column].apply(safe_tz_localize)
 
 # Map Student
 def map_student(row):
@@ -60,7 +66,6 @@ def map_student(row):
         "password": "password123",  # Default password, hashed in Mongoose pre-save
         "role": "student"
     }
-
 # Map Internship
 def map_internship(row):
     return {
@@ -101,6 +106,6 @@ try:
         student_collection.insert_many(students, ordered=False)
     if internships:
         internship_collection.insert_many(internships, ordered=False)
-    print(f"✅ Inserted {len(students)} new students and {len(internships)} internships.")
+    print(f"\u2705 Inserted {len(students)} new students and {len(internships)} internships.")
 except Exception as e:
-    print(f"❌ Error occurred during insertion: {e}")
+    print(f"\u274C Error occurred during insertion: {e}")

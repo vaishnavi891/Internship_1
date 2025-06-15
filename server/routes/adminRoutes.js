@@ -63,29 +63,29 @@ router.get('/internships/filter', async (req, res) => {
     if (section) studentQuery.section = section;
     if (semester) studentQuery.semester = semester;
 
-    const students = await Student.find(studentQuery);
-    const studentMap = {};
-    students.forEach(s => { studentMap[s.rollNumber] = s; });
+  const students = await Student.find(studentQuery);
+  const studentMap = {};
+  students.forEach(s => { studentMap[s.rollNumber] = s; });
 
-    // Filter internships that have a matching student
-    const filteredInternships = internships
-      .filter(i => studentMap[i.rollNumber])
-      .map(i => {
-        const start = new Date(i.startingDate);
-        const end = new Date(i.endingDate);
-        let status = "";
+  // Filter internships that have a matching student
+  const filteredInternships = internships
+    .filter(i => studentMap[i.rollNumber])
+    .map(i => {
+      const start = new Date(i.startingDate);
+      const end = new Date(i.endingDate);
+      let status = "";
 
-        if (today < start) status = "future";
-        else if (today > end) status = "past";
-        else status = "ongoing";
+      if (today < start) status = "future";
+      else if (today > end) status = "past";
+      else status = "ongoing";
 
-        return {
-          ...i.toObject(),
-          status,
-          semester: studentMap[i.rollNumber]?.semester || null,
-          section: studentMap[i.rollNumber]?.section || null,
-        };
-      });
+      return {
+        ...i.toObject(),
+        status,
+        semester: studentMap[i.rollNumber]?.semester || null,
+        section: studentMap[i.rollNumber]?.section || null,
+      };
+    });
 
     res.json(filteredInternships);
   } catch (err) {
@@ -162,12 +162,10 @@ router.get('/feedbacks', async (req, res) => {
   }
 });
 
-// Submit feedback with basic validation
 router.post('/feedbacks', async (req, res) => {
   try {
     const {
       rollNumber,
-      internshipID,
       skillsLearned,
       technicalSkill,
       communicationSkill,
@@ -179,7 +177,6 @@ router.post('/feedbacks', async (req, res) => {
     // Basic validation
     if (
       !rollNumber ||
-      !internshipID ||
       !skillsLearned ||
       !technicalSkill ||
       !communicationSkill ||
@@ -190,9 +187,21 @@ router.post('/feedbacks', async (req, res) => {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
+    // Check if internship has ended before allowing feedback
+    const internship = await Internship.findOne({ rollNumber });
+    if (!internship) {
+      return res.status(400).json({ error: 'No internship found for this roll number' });
+    }
+
+    const today = new Date();
+    const endingDate = new Date(internship.endingDate);
+
+    if (today < endingDate) {
+      return res.status(400).json({ error: 'Feedback can only be submitted after the internship ends' });
+    }
+
     const newFeedback = new Feedback({
       rollNumber,
-      internshipID,
       skillsLearned,
       technicalSkill,
       communicationSkill,
@@ -216,7 +225,9 @@ router.get('/analytics', async (req, res) => {
     const { status, year, month } = req.query;
 
     const internships = await Internship.find();
+    console.log('Internships fetched:', internships);
     const students = await Student.find();
+    console.log('Students fetched:', students);
 
     const studentMap = {};
     students.forEach((s) => { studentMap[s.rollNumber] = s; });
@@ -244,6 +255,8 @@ router.get('/analytics', async (req, res) => {
       return true;
     });
 
+    console.log('Filtered internships:', filtered);
+
     const branchCounts = {};
     const semesterCounts = {};
 
@@ -270,12 +283,14 @@ router.get('/roll/:rollNumber', async (req, res) => {
   try {
     const rollNumber = req.params.rollNumber;
 
-    const student = await Student.findOne({ rollNumber });
+  const student = await Student.findOne({ rollNumber });
+    console.log('Student found:', student);
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }
 
-    const internships = await Internship.find({ rollNumber });
+  const internships = await Internship.find({ rollNumber });
+    console.log('Internships found:', internships);
     const today = new Date();
 
     const detailedInternships = internships.map((internship) => {

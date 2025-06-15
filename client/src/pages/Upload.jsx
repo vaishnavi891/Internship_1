@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Upload = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     rollNumber: '',
-    internshipID: '',
     skillsLearned: '',
     technicalSkill: '',
     communicationSkill: '',
@@ -18,6 +19,33 @@ const Upload = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Fetch internship details to check end date
+    try {
+      const internshipRes = await fetch(`http://localhost:5000/api/admin/roll/${formData.rollNumber}`);
+      if (!internshipRes.ok) {
+        alert('Could not find internship details for this roll number.');
+        return;
+      }
+      const internshipData = await internshipRes.json();
+      const internships = internshipData.internships || [];
+      if (internships.length === 0) {
+        alert('No internship found for this roll number.');
+        return;
+      }
+      const endingDate = new Date(internships[0].endingDate);
+      const today = new Date();
+      if (today < endingDate) {
+        alert('Feedback can only be submitted after the internship ends.');
+        return;
+      }
+    } catch (err) {
+      console.error('Error fetching internship details:', err);
+      alert('Error verifying internship end date.');
+      return;
+    }
+
+    console.log('Submitting feedback with data:', formData);
 
     try {
       const response = await fetch('http://localhost:5000/api/admin/feedbacks', {
@@ -39,6 +67,7 @@ const Upload = () => {
           timeManagement: '',
           overallExperience: ''
         });
+        navigate("/home");
       } else {
         const errorData = await response.json();
         alert('Submission failed: ' + (errorData.error || 'Unknown error'));
@@ -145,11 +174,12 @@ const Upload = () => {
             required
           ></textarea>
         </div>
-        <div className="text-center">
-          <button type="submit" className="btn btn-primary w-100">
-            Submit Feedback
-          </button>
-        </div>
+       <div className="text-center mt-3">
+  <button type="submit" className="btn btn-success px-4 py-2" style={{ fontSize: "16px" }}>
+    Submit Feedback
+  </button>
+</div>
+
       </form>
     </div>
   );

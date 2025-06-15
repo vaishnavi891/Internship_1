@@ -29,10 +29,13 @@ const Students = () => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
 
-  const openModal = async (rollNumber) => {
+  const openModal = async (rollNo) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/admin/roll/${rollNumber}`);
-      setSelectedStudent(res.data);
+      const res = await axios.get(`http://localhost:5000/api/admin/roll/${rollNo}`);
+      setSelectedStudent({
+        student: res.data.student,
+        internships: res.data.internships
+      });
       console.log(res.data)
       setShowModal(true);
     } catch (err) {

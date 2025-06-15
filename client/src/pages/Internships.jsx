@@ -1,29 +1,30 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import "./Internships.css";
 
 const Internships = () => {
   const [internships, setInternships] = useState([]);
   const [filters, setFilters] = useState({
-  type: "",
-  semester: "",
-  section: "",
-  year: "",
-  month: "",
-  endMonth: "",
-  endYear: "",
-  company: "",
-});
-const [showFilters, setShowFilters] = useState(false);
-const toggleFilters = () => {
-  setShowFilters(!showFilters);
-};
+    type: "",
+    semester: "",
+    section: "",
+    year: "",
+    month: "",
+    endMonth: "",
+    endYear: "",
+    company: "",
+  });
+  const [showFilters, setShowFilters] = useState(false);
+
+  const toggleFilters = () => {
+    setShowFilters(!showFilters);
+  };
 
   const convertDriveLink = (url) => {
-  if (!url) return null;
-  const match = url.match(/[-\w]{25,}/);
-  return match ? `https://drive.google.com/file/d/${match[0]}/view` : url;
-};
-
+    if (!url) return null;
+    const match = url.match(/[-\w]{25,}/);
+    return match ? `https://drive.google.com/file/d/${match[0]}/view` : url;
+  };
 
   const fetchInternships = async () => {
     try {
@@ -60,217 +61,96 @@ const toggleFilters = () => {
       section: "",
       year: "",
       month: "",
+      endMonth: "",
+      endYear: "",
+      company: "",
     });
     fetchInternships();
   };
 
-  // Helper to render colored status badge
   const renderStatusBadge = (status) => {
-    let color = "secondary";
-    if (status === "ongoing") color = "success";
-    else if (status === "past") color = "danger";
-    else if (status === "future") color = "info";
-
+    const statusMap = {
+      ongoing: "badge-green",
+      past: "badge-red",
+      future: "badge-blue",
+    };
     return (
-      <span className={`badge border border-${color} text-${color} text-capitalize`}>{status}</span>
+      <span className={`badge ${statusMap[status] || "badge-gray"}`}>
+        {status}
+      </span>
     );
   };
 
   return (
-    <div className="container-fluid mt-5">
-      <h1 className="text-center mb-4 fw-bold border-bottom pb-2">Internships</h1>
+    <div className="container">
+      <h1 className="title">Internships</h1>
 
-      <h5 className="card-title mb-3 fw-semibold cursor-pointer" onClick={toggleFilters}>
-        <button className="btn btn-outline-dark">{showFilters ? 'Hide Filters' : 'Show Filters'}</button>
-      </h5>
-      {/* Filter Panel */}
+      <button className="toggle-btn" onClick={toggleFilters}>
+        {showFilters ? "Hide Filters" : "Show Filters"}
+      </button>
+
       {showFilters && (
-      <div className="card shadow-sm mb-5">
-        <div className="card-body">
-          <h5 className="card-title mb-3 fw-semibold">Filter Internships</h5>
-          <div className="row g-3">
-            <div className="col-md-3">
-              <label className="form-label">Company</label>
-              <input
-                type="text"
-                className="form-control"
-                name="company"
-                onChange={handleChange}
-                value={filters.company}
-              />
-            </div>
-            <div className="col-md-3">
-              <label className="form-label">Status</label>
-              <select
-                className="form-select"
-                name="type"
-                onChange={handleChange}
-                value={filters.type}
-              >
-                <option value="">All Status</option>
-                <option value="ongoing">Ongoing</option>
-                <option value="past">Past</option>
-                <option value="future">Upcoming</option>
-              </select>
-            </div>
+        <div className="filter-card">
+          <h2 className="filter-title">Filter Internships</h2>
+          <div className="filters-grid">
+            {[
+              ["Company", "company"],
+              ["Status", "type", ["", "ongoing", "past", "future"]],
+              ["Semester", "semester", ["", "II-I", "II-II", "III-I", "III-II", "IV-I", "IV-II"]],
+              ["Section", "section", ["", "A", "B", "C", "D"]],
+              ["Start Year", "year", ["", 2023, 2024, 2025, 2026]],
+              ["Start Month", "month", ["", ...Array.from({ length: 12 }, (_, i) => i + 1)]],
+              ["End Month", "endMonth", ["", ...Array.from({ length: 12 }, (_, i) => i + 1)]],
+              ["End Year", "endYear", ["", 2023, 2024, 2025, 2026]],
+            ].map(([label, name, options]) => (
+              <div className="form-group" key={name}>
+                <label>{label}</label>
+                {options ? (
+                  <select name={name} value={filters[name]} onChange={handleChange}>
+                    {options.map((opt, i) => (
+                      <option key={i} value={opt}>
+                        {opt || `All ${label}`}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <input type="text" name={name} value={filters[name]} onChange={handleChange} />
+                )}
+              </div>
+            ))}
 
-            <div className="col-md-3">
-              <label className="form-label">Semester</label>
-              <select
-                className="form-select"
-                name="semester"
-                onChange={handleChange}
-                value={filters.semester}
-              >
-                <option value="">All Semesters</option>
-                <option value="II-I">2-1</option>
-                <option value="II-II">2-2</option>
-                <option value="III-I">3-1</option>
-                <option value="III-II">3-2</option>
-                <option value="IV-I">4-1</option>
-                <option value="IV-II">4-2</option>
-              </select>
-            </div>
-
-            <div className="col-md-3">
-              <label className="form-label">Section</label>
-              <select
-                className="form-select"
-                name="section"
-                onChange={handleChange}
-                value={filters.section}
-              >
-                <option value="">All Sections</option>
-                <option value="A">A</option>
-                <option value="B">B</option>
-                <option value="C">C</option>
-                <option value="D">D</option>
-              </select>
-            </div>
-
-            <div className="col-md-3">
-              <label className="form-label">Start Year</label>
-              <select
-                className="form-select"
-                name="year"
-                onChange={handleChange}
-                value={filters.year}
-              >
-                <option value="">All Years</option>
-                {[2023, 2024, 2025, 2026].map((yr) => (
-                  <option key={yr} value={yr}>
-                    {yr}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="col-md-3">
-              <label className="form-label">Start Month</label>
-              <select
-                className="form-select"
-                name="month"
-                onChange={handleChange}
-                value={filters.month}
-              >
-                <option value="">All Months</option>
-                {[
-                  "January",
-                  "February",
-                  "March",
-                  "April",
-                  "May",
-                  "June",
-                  "July",
-                  "August",
-                  "September",
-                  "October",
-                  "November",
-                  "December",
-                ].map((m, i) => (
-                  <option key={i + 1} value={i + 1}>
-                    {m}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="col-md-3">
-              <label className="form-label">End Month</label>
-              <select
-                className="form-select"
-                name="endMonth"
-                onChange={handleChange}
-                value={filters.endMonth}
-              >
-                <option value="">All Months</option>
-                {[
-                  "January", "February", "March", "April", "May", "June",
-                  "July", "August", "September", "October", "November", "December",
-                ].map((m, i) => (
-                  <option key={i + 1} value={i + 1}>
-                    {m}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="col-md-3">
-              <label className="form-label">End Year</label>
-              <select
-                className="form-select"
-                name="endYear"
-                onChange={handleChange}
-                value={filters.endYear}
-              >
-                <option value="">All Years</option>
-                {[2023, 2024, 2025, 2026].map((yr) => (
-                  <option key={yr} value={yr}>
-                    {yr}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="col-md-3 d-flex align-items-end">
-              <button className="btn btn-primary w-100" onClick={handleFilter}>
+            <div className="form-group full">
+              <button className="btn primary" onClick={handleFilter}>
                 Apply Filter
               </button>
-            </div>
-
-            <div className="col-md-3 d-flex align-items-end">
-              <button
-                className="btn btn-outline-secondary w-100"
-                onClick={handleClear}
-              >
+              <button className="btn secondary" onClick={handleClear}>
                 Clear Filters
               </button>
             </div>
           </div>
         </div>
-      </div>
       )}
-      {/* Table */}
-      <div className="card shadow-sm">
-        <div className="card-body">
-          <div className="table-responsive">
-            <table className="table table-striped table-hover align-middle">
-              <thead className="table-light">
-                <tr>
-                  <th>Roll No</th>
-                  <th>Organization</th>
-                  <th>Role</th>
-                  <th>Start Date</th>
-                  <th>End Date</th>
-                  <th>Status</th>
-                  <th>Semester</th>
-                  <th>Section</th>
-                  <th>Documents</th>
-                </tr>
-              </thead>
-              <tbody>
-                {internships.map((i) => (
-                  <tr key={i._id} className="fw-normal">
+
+      <div className="table-card">
+        <div className="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Roll No</th>
+                <th>Organization</th>
+                <th>Role</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Status</th>
+                <th>Semester</th>
+                <th>Section</th>
+                <th>Documents</th>
+              </tr>
+            </thead>
+            <tbody>
+              {internships.length > 0 ? (
+                internships.map((i) => (
+                  <tr key={i._id}>
                     <td>{i.rollNumber}</td>
                     <td>{i.organizationName}</td>
                     <td>{i.role}</td>
@@ -279,54 +159,36 @@ const toggleFilters = () => {
                     <td>{renderStatusBadge(i.status)}</td>
                     <td>{i.semester || "-"}</td>
                     <td>{i.section || "-"}</td>
-                    <td>
-                    <div className="d-flex flex-column">
+                    <td className="docs">
                       {i.applicationLetter && (
-                        <a
-                          href={convertDriveLink(i.applicationLetter)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn btn-sm btn-outline-primary mb-1"
-                        >
+                        <a href={convertDriveLink(i.applicationLetter)} target="_blank" rel="noreferrer">
                           📄 Application
                         </a>
                       )}
                       {i.offerLetter && (
-                        <a
-                          href={convertDriveLink(i.offerLetter)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn btn-sm btn-outline-success mb-1"
-                        >
+                        <a href={convertDriveLink(i.offerLetter)} target="_blank" rel="noreferrer">
                           📄 Offer
                         </a>
                       )}
                       {i.noc ? (
-                        <a
-                          href={convertDriveLink(i.noc)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn btn-sm btn-outline-warning"
-                        >
+                        <a href={convertDriveLink(i.noc)} target="_blank" rel="noreferrer">
                           📄 NOC
                         </a>
                       ) : (
-                        <span className="text-muted small">NOC not uploaded</span>
+                        <span className="muted">NOC not uploaded</span>
                       )}
-                    </div>
-                  </td>
-                  </tr>
-                ))}
-                {internships.length === 0 && (
-                  <tr>
-                    <td colSpan="9" className="text-center text-muted">
-                      No internships found
                     </td>
                   </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="9" className="muted center">
+                    No internships found
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
